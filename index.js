@@ -11,6 +11,9 @@ import { fileURLToPath } from "url"
 import register from './controllers/auth.js';
 import authRoutes from "./routes/auth.routes.js"
 import usersRoutes from "./routes/users.routes.js"
+import postRoutes from "./routes/post.routes.js"
+import verifyJwt from './middlewares/verifyJwt.js';
+import { createPost } from './controllers/createPost.js';
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -42,9 +45,11 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 app.post('/auth/register', upload.single("picture"), register)
+app.post('/post', verifyJwt, upload.single("picture"), createPost)
 
 app.use('/auth', authRoutes)
 app.use('/users', usersRoutes)
+app.use('/posts', postRoutes)
 
 
 // mongoose connect
