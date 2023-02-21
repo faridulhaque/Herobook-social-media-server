@@ -13,17 +13,23 @@ const login = async (req, res, next) => {
             const isMatched = await bcrypt.compare(password, user.password)
 
             if(!isMatched){
-                return res.status(404).json({msg: 'Password did not match'})
+                return res.status(404).json({message: 'Password did not match'})
             }
             else{
                 const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
-                user.password = '';
-                res.status(200).json({user, token})
+                const loggedInUser = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    picturePath: user.picturePath,
+                    _id: user._id,
+                }
+                res.status(200).json({loggedInUser, token})
             }
         }
 
     } catch (error) {
-        res.status(404).json({ error: error.message })
+        res.status(404).json({ message: error.message })
     }
 }
 export default login;

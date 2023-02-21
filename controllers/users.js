@@ -64,7 +64,7 @@ export const addOrRemoveFriend = async (req, res, next) => {
             return { _id, firstName, lastName, picturePath }
         })
         
-        res.status(200).json(friends);
+        res.status(200).json(formattedFriends);
 
 
     } catch (error) {

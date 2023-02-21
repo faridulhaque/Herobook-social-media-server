@@ -9,6 +9,13 @@ const register = async (req, res, next) => {
             firstName, lastName, email, password, location, picturePath, friends, occupation,
         } = req.body
 
+
+        const isExisted = await UserModel.findOne({email})
+
+        if(isExisted) {
+            return res.status(403).json({message: "Email already used"})
+        }
+
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt)
         const newUser = new UserModel({
@@ -27,6 +34,8 @@ const register = async (req, res, next) => {
         })
 
         const savedUser = await newUser.save();
+        savedUser.password = null;
+
         res.status(201).json(savedUser)
 
     }
