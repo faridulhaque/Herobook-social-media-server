@@ -26,22 +26,24 @@ const UserSchema = new mongoose.Schema(
             min: 2,
             max: 50
         },
-        picturePath: {
-            type: String,
-            default: "",
-        },
+
         friends: {
             type: Array,
             default: []
         },
+        picturePath: String,
         location: String,
+        picturePublicId: String,
+        birthDate: String,
+        currentCity: String,
+        homeTown: String,
         occupation: String,
         viewedProfile: Number,
         impressions: Number
 
-    },{
-        timestamps: true
-    }
+    }, {
+    timestamps: true
+}
 )
 
 const UserModel = mongoose.model("User", UserSchema);
