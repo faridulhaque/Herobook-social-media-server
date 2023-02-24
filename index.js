@@ -44,10 +44,11 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage})
 
-app.post('/auth/register', upload.single("picture"), register)
-app.post('/post', verifyJwt, upload.single("picture"), createPost)
 
 app.use('/auth', authRoutes)
+
+app.post('/post/create', verifyJwt, createPost)
+
 app.use('/users', usersRoutes)
 app.use('/posts', postRoutes)
 
