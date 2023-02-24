@@ -32,8 +32,8 @@ const UserSchema = new mongoose.Schema(
             default: []
         },
         picturePath: String,
-        location: String,
         picturePublicId: String,
+        location: String,
         birthDate: String,
         currentCity: String,
         homeTown: String,

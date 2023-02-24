@@ -46,7 +46,7 @@ export const addOrRemoveFriend = async (req, res, next) => {
         if (user.friends.includes(friendId)) {
             user.friends = user.friends.filter((id) => id !== friendId)
             friend.friends = friend.friends.filter((id) => id !== id)
-        }else{
+        } else {
             user.friends.push(friendId)
             friend.friends.push(id)
         }
@@ -63,11 +63,28 @@ export const addOrRemoveFriend = async (req, res, next) => {
         }) => {
             return { _id, firstName, lastName, picturePath }
         })
-        
+
         res.status(200).json(formattedFriends);
 
 
     } catch (error) {
         res.status(404).json({ msg: error.message });
+    }
+}
+
+
+export const updateProfile = async (req, res, next) => {
+
+    try {
+        const users = req.body;
+        const _id = req.params.id;
+
+        const updatedProfile = await UserModel.findOneAndUpdate(_id, users, { new: true })
+
+        res.status(200).json(updatedProfile)
+        // res.send("")
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message })
     }
 }

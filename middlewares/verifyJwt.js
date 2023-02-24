@@ -10,13 +10,13 @@ const verifyJwt = async (req, res, next) => {
             const verifyToken = jwt.verify(token, process.env.JWT_SECRET)
             req.user= verifyToken;
             
-            res.status()
+            // res.status()
 
             next()
         }
 
     } catch (error) {
-        res.status(500).send({error: error.message});
+        res.status(500).json({error: error.message});
     }
 }
 
