@@ -12,7 +12,8 @@ export const feedPosts = async (req, res, next) => {
 
 export const userPosts = async (req, res, next) => {
     try {
-        const userId = req.params.userId;
+        const userId = req.params.id;
+
         const posts = await PostModel.find({userId})
         res.status(200).json(posts)
     }

@@ -6,8 +6,8 @@ import verifyJwt from "../middlewares/verifyJwt.js";
 const router = express.Router()
 
 
+router.get('/all/:id', verifyJwt, userPosts)
 router.get('/', verifyJwt, feedPosts)
-router.get('/:id', verifyJwt, userPosts)
 router.patch('/:id/like',verifyJwt, likePost)
 
 

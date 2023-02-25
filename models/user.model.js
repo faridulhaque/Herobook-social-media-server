@@ -31,7 +31,11 @@ const UserSchema = new mongoose.Schema(
             type: Array,
             default: []
         },
-        picturePath: String,
+        picturePath: {
+            type: String,
+            default: "https://i.ibb.co/6YK1cXs/avatar.jpg"
+        },
+
         picturePublicId: String,
         location: String,
         birthDate: String,
