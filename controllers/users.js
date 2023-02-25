@@ -1,3 +1,4 @@
+import { Promise } from "mongoose";
 import UserModel from "../models/user.model.js";
 
 export const getUser = async (req, res, next) => {
@@ -15,19 +16,12 @@ export const getUser = async (req, res, next) => {
 export const getUserFriends = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const user = await UserModel.findById(id)
+        const user = await UserModel.findById(id).select('friends -_id');
+        const friends = user?.friends;
 
-        const friends = await promise.all(
-            user.friends.map((id) => UserModel.findById(id))
-        );
 
-        const formattedFriends = friends.map(({
-            _id, firstName, lastName, picturePath
-        }) => {
-            return { _id, firstName, lastName, picturePath }
-        })
 
-        res.status(200).json(formattedFriends)
+        res.status(200).json(friends)
 
 
     } catch (error) {
@@ -40,31 +34,29 @@ export const getUserFriends = async (req, res, next) => {
 export const addOrRemoveFriend = async (req, res, next) => {
     try {
         const { id, friendId } = req.params;
-        const user = await UserModel.findById(id)
-        const friend = await UserModel.findById(friendId)
 
-        if (user.friends.includes(friendId)) {
-            user.friends = user.friends.filter((id) => id !== friendId)
-            friend.friends = friend.friends.filter((id) => id !== id)
-        } else {
-            user.friends.push(friendId)
-            friend.friends.push(id)
+        const user = await UserModel.findById(id).select('friends -_id');
+        const friends = user?.friends;
+        const isFriend = friends?.includes(friendId);
+
+        if (isFriend) {
+            const updatedFriends = friends?.filter(ef => ef !== friendId)
+            const result = await UserModel.findOneAndUpdate({ _id: id }, { friends: updatedFriends }, { new: true })
+
+            res.status(200).json(result.friends);
+
         }
 
-        await user.save()
-        await friend.save()
+        else {
 
-        const friends = await promise.all(
-            user.friends.map((id) => UserModel.findById(id))
-        );
+            const updatedFriends = [...friends, friendId]
+            const result = await UserModel.findOneAndUpdate({ _id: id }, { friends: updatedFriends }, { new: true })
 
-        const formattedFriends = friends.map(({
-            _id, firstName, lastName, picturePath
-        }) => {
-            return { _id, firstName, lastName, picturePath }
-        })
+            res.status(200).json(result.friends);
 
-        res.status(200).json(formattedFriends);
+        }
+
+
 
 
     } catch (error) {
@@ -83,6 +75,20 @@ export const updateProfile = async (req, res, next) => {
 
         res.status(200).json(updatedProfile)
         // res.send("")
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message })
+    }
+}
+
+
+export const getAllUser = async (req, res, next) => {
+
+    try {
+
+        const users = await UserModel.find()
+        const result = users.map(user => ({ firstName: user.firstName, lastName: user.lastName, _id: user._id, email: user.email, picturePath: user.picturePath }))
+        res.status(200).json(result)
     }
     catch (err) {
         res.status(404).json({ message: err.message })
