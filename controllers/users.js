@@ -29,6 +29,29 @@ export const getUserFriends = async (req, res, next) => {
     }
 }
 
+export const getFriendSuggestion = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const allUser = await UserModel.find().select("firstName lastName picturePath")
+        const user = await UserModel.findById(id).select('friends -_id');
+
+
+        const friends = user.friends
+
+        const suggestion = allUser.filter(obj => !friends.includes(obj._id));
+
+
+        console.log(suggestion);
+
+
+        res.status(200).json(suggestion)
+
+
+    } catch (error) {
+        res.status(404).json({ msg: error.message });
+    }
+}
+
 
 
 export const addOrRemoveFriend = async (req, res, next) => {
