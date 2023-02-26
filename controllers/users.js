@@ -41,7 +41,6 @@ export const getFriendSuggestion = async (req, res, next) => {
         const suggestion = allUser.filter(obj => !friends.includes(obj._id));
 
 
-        console.log(suggestion);
 
 
         res.status(200).json(suggestion)
@@ -91,11 +90,13 @@ export const addOrRemoveFriend = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
 
     try {
-        const users = req.body;
-        const _id = req.params.id;
 
-        const updatedProfile = await UserModel.findOneAndUpdate(_id, users, { new: true })
+        const users = req.body
+        delete users._id
+        console.log(users)
 
+        const updatedProfile = await UserModel.findOneAndUpdate({ _id: req.params.id }, users, { new: true })
+        console.log(updatedProfile)
         res.status(200).json(updatedProfile)
         // res.send("")
     }

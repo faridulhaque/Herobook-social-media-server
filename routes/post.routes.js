@@ -1,14 +1,16 @@
 import express from "express";
-import { deletePost, feedPosts, likePost, userPosts } from "../controllers/posts.js";
+import { deletePost, feedPosts, getComments, likePost, makeComment, userPosts } from "../controllers/posts.js";
 import verifyJwt from "../middlewares/verifyJwt.js";
 
 
 const router = express.Router()
 
 
-router.get('/all/:id', verifyJwt, userPosts)
+router.post('/comment',verifyJwt, makeComment)
+router.patch('/like',verifyJwt, likePost)
 router.get('/all', verifyJwt, feedPosts)
-router.patch('/:id/like',verifyJwt, likePost)
+router.get('/all/:id', verifyJwt, userPosts)
+router.get('/comments/:id',verifyJwt, getComments)
 router.delete('/:id', verifyJwt, deletePost)
 
 
