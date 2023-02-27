@@ -1,11 +1,19 @@
 import mongoose from "mongoose";
 import PostModel from "../models/post.model.js"
+import UserModel from "../models/user.model.js"
 
 export const feedPosts = async (req, res, next) => {
+
     try {
+        const id = req.params.id
         const posts = await PostModel.find()
-        posts.reverse();
-        res.status(200).json(posts)
+        const user = await UserModel.findById(id).select('friends -_id')
+        const friends = user.friends;
+
+        const feedPosts = posts.filter(post => friends.includes(post.userId));
+        feedPosts.reverse();
+
+        res.status(200).json(feedPosts)
     }
     catch (err) {
         res.status(404).json({ message: err.message })

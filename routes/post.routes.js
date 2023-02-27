@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.post('/comment',verifyJwt, makeComment)
 router.patch('/like',verifyJwt, likePost)
-router.get('/all', verifyJwt, feedPosts)
+router.get('/feed/:id', verifyJwt, feedPosts)
 router.get('/all/:id', verifyJwt, userPosts)
 router.get('/comments/:id',verifyJwt, getComments)
 router.delete('/:id', verifyJwt, deletePost)
